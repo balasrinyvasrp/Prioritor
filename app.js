@@ -11,7 +11,7 @@ Genre =require('./models/genre');
 Book =require('./models/Book');
 
 // Connect to Mongoose
-mongoose.connect('mongodb://localhost/bookstore');
+mongoose.connect('mongodb://localhost/bookstore',{useNewUrlParser: true, useUnifiedTopology: true});
 var db = mongoose.connection;
 
 app.get('/', (req, res) => {
