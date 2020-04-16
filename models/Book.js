@@ -1,21 +1,19 @@
 const mongoose = require('mongoose');
 
 // Book Schema
-const bookSchema = mongoose.Schema({
+const bookSchema =new mongoose.Schema({
 	Patient_name:{
 		type: String,
 		required: true
 	},
 	Age:{
-		type: String,
-		required: true
+		type: String
 	},
 	Gender:{
 		type: String
 	},
 	Weight:{
-		type: String,
-		required: true
+		type: String
 	},
 	Blood_Group:{
 		type: String
@@ -38,14 +36,25 @@ const bookSchema = mongoose.Schema({
 	BSA_Value:{
 		type: String
 	},
-
+	Patient_Latitude:{
+		type: String
+	},
+	Patient_Longitude:{
+		type: String
+	},
+	Hospital_Latitude:{
+		type: String
+	},
+	Hospital_Longitude:{
+		type: String
+	},
 	create_date:{
 		type: Date,
 		default: Date.now
 	}
 });
 
-const Book = module.exports = mongoose.model('Book', bookSchema);
+module.exports = mongoose.model('Book', bookSchema);
 // Get Books
 module.exports.getBooks = (callback, limit) => {
 	Book.find(callback).limit(limit);
@@ -75,7 +84,6 @@ module.exports.updateBook = (id, book, options, callback) => {
 		Specific_Details: book.Specific_Details,
 		Degree_of_Burn: book.Degree_of_Burn,
 		BSA_Value: book.BSA_Value
-
 	}
 	Book.findOneAndUpdate(query, update, options, callback);
 }
