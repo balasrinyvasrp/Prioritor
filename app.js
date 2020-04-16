@@ -3,6 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const dotenv=require('dotenv');
+dotenv.config();
 
 // app.use(express.static(__dirname+'/client'));
  app.use(bodyParser.json());
@@ -11,11 +13,14 @@ Genre =require('./models/genre');
 Book =require('./models/Book');
 
 // Connect to Mongoose
-mongoose.connect('mongodb://localhost/bookstore',{useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(
+	process.env.DB_CONNECT,
+	{useNewUrlParser:true},
+	()=>console.log('conneced to db!'));
 var db = mongoose.connection;
 
-app.get('/', (req, res) => {
-	res.send('Please use /api/details or /api/user');
+app.get('/api/v1', (req, res) => {
+	res.send('Please use /api/v1/details');
 });
 
 
@@ -40,7 +45,7 @@ app.get('/', (req, res) => {
 //  });
 
 
-app.get('/api/token',(req,res)=>
+app.get('/api/v1/token',(req,res)=>
 {
 	const user={
 		id:1,
@@ -54,7 +59,7 @@ app.get('/api/token',(req,res)=>
 	});
 });
 
-app.get('/api/user', verifyToken, (req, res) => {  
+app.get('/api/v1/user', verifyToken, (req, res) => {  
   jwt.verify(req.token, 'secretkey', (err1, authdata) => {
   	if(err1)
   	{
@@ -94,7 +99,7 @@ function verifyToken(req, res, next) {
 }
 
 
-app.post('/api/user',(req, res) => {
+app.post('/api/v1/user',(req, res) => {
 	var genre = req.body;
 	Genre.addGenre(genre, (err, genre) => {
 		if(err){
@@ -116,7 +121,7 @@ app.post('/api/user',(req, res) => {
 //   });
 // });
 
-app.put('/api/user/:_id', (req, res) => {
+app.put('/api/v1/user/:_id', (req, res) => {
 	var id = req.params._id;
 	var genre = req.body;
 	Genre.updateGenre(id, genre, {}, (err, genre) => {
@@ -127,7 +132,7 @@ app.put('/api/user/:_id', (req, res) => {
 	});
 });
 
-app.delete('/api/user/:_id', (req, res) => {
+app.delete('/api/v1/user/:_id', (req, res) => {
 	var id = req.params._id;
 	Genre.removeGenre(id, (err, genre) => {
 		if(err){
@@ -137,7 +142,7 @@ app.delete('/api/user/:_id', (req, res) => {
 	});
 });
 
-app.get('/api/details', verifyToken, (req, res) => {
+app.get('/api/v1/details', verifyToken, (req, res) => {
 	jwt.verify(req.token, 'secretkey', (err1, resp) => {
 		if(err1)
 		{
@@ -155,7 +160,7 @@ app.get('/api/details', verifyToken, (req, res) => {
 });
 	});
 
-app.get('/api/details/:_id', verifyToken, (req, res) => {
+app.get('/api/v1/details/:_id', verifyToken, (req, res) => {
 	jwt.verify(req.token, 'secretkey', (err1, resp) => {
 		if(err1)
 		{
@@ -173,7 +178,7 @@ app.get('/api/details/:_id', verifyToken, (req, res) => {
 });
 	});
 
-app.post('/api/details', (req, res) => {
+app.post('/api/v1/details', (req, res) => {
 	var book = req.body;
 	Book.addBook(book, (err, book) => {
 		if(err){
@@ -183,7 +188,7 @@ app.post('/api/details', (req, res) => {
 	});
 });
 
-app.put('/api/details/:_id', (req, res) => {
+app.put('/api/v1/details/:_id', (req, res) => {
 	var id = req.params._id;
 	var book = req.body;
 	Book.updateBook(id, book, {}, (err, book) => {
@@ -194,7 +199,7 @@ app.put('/api/details/:_id', (req, res) => {
 	});
 });
 
-app.delete('/api/details/:_id', (req, res) => {
+app.delete('/api/v1/details/:_id', (req, res) => {
 	var id = req.params._id;
 	Book.removeBook(id, (err, book) => {
 		if(err){
@@ -204,5 +209,5 @@ app.delete('/api/details/:_id', (req, res) => {
 	});
 });
 
-app.listen(80);
-console.log('Running on port 80...');
+app.listen(5000);
+console.log('Running on port 3000...');
